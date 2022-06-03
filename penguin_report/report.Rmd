@@ -7,6 +7,7 @@ output:
     theme:
       bootswatch: minty
   pdf_document: default
+## important for this to updated based on shiny inputs
 params:
   data: NULL
   xaxis: NULL
@@ -23,24 +24,22 @@ params:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, eval=TRUE, message=FALSE, warning=FALSE)
-
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+## webshot package phantom javascript, helps render images in report
 library(webshot) 
 if(is.null(webshot:::find_phantom())){webshot::install_phantomjs()}
-
 theme_set(theme_minimal())
-
 correct1 <- if(params$q1 == params$key[[1]]) {"correct"} else {"incorrect"}
 correct2 <- if(params$q2 == params$key[[2]]) {"correct"} else {"incorrect"}
 correct3 <- if(params$q3 == params$key[[3]]) {"correct"} else {"incorrect"}
-
 score <- sum(c(correct1, correct2, correct3) == "correct")
 ```
 
 ```{r penguinimage, echo=FALSE, fig.align='center', out.width = "20%"}
 knitr::include_graphics("penguins.png", dpi = 1200)
+## works with phantomjs to have nice images included in knit document
 ```
 
 *Note: Artwork by [\@allison_horst](https://allisonhorst.github.io/palmerpenguins/articles/art.html).*  
@@ -54,12 +53,10 @@ The scatterplot below shows the relationship between `r params$prettynames[2]` a
 ylab <- params$pretty_names[1]
 xlab <- params$pretty_names[2]
 grouplab <- params$pretty_names[3]
-
 colors <- c("darkorange","purple","cyan4")
-
 # Create plot
 params$data %>%
-  ggplot(aes_string(x = params$xaxis, y = params$yaxis)) +
+  ggplot(aes_string(x = params$xaxis, y = params$yaxis)) + ## using aes_string() if input is a string
   # Add scatter points
   geom_point(aes_string(colour = params$groupvar,
                         shape = params$groupvar),
@@ -72,8 +69,6 @@ params$data %>%
   labs(x = xlab, y = ylab) +
   guides(colour = guide_legend(grouplab),
          shape = guide_legend(grouplab))
-
-
 ```
 
 \newpage
@@ -100,8 +95,6 @@ params$data %>%
   ) %>%
   # Round summary stats to 2 decimals
   DT::formatRound(c("xvar_mean", "xvar_sd", "yvar_mean", "yvar_sd"), 2)
-
-
 ```
 
 ## Your Quiz Results
@@ -118,4 +111,5 @@ Your response was `r params$q2`, which is `r correct2`. `r if(correct2 == "incor
 
 **3. What penguin species has the highest average body mass?**  
 Your response was `r params$q3`, which is `r correct3`. `r if(correct3 == "incorrect") {paste0("The correct answer is ", params$key[[3]], ".")}`
+
 
