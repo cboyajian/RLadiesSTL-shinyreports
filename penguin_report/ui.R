@@ -30,7 +30,7 @@ shinyUI(fluidPage(
   p("This App was created to accompany the R-Ladies St. Louis talk ", 
     a(href="https://github.com/winterstat/RLadiesSTL-shinyreports", 
       "'Creating Dynamic Reports from your Shiny App'", 
-      target = "_blank", .noWS = "outside"), '.', 
+      target = "_blank", .noWS = "outside"), '.', ##`noWS` to remove space before period
     .noWS = c("after-begin", "before-end")), 
   
   # Sidebar with Input options for user
@@ -74,12 +74,15 @@ shinyUI(fluidPage(
                               choices = unique(penguins$species)),
                  br(),
                  hr(),
-                 # h4("Download your custom report!"),
-                 # radioButtons('format', tags$b('Pick a Document format'), 
-                 #               c('PDF', 'HTML', 'Word'),
-                 #               inline = TRUE),
-                 # downloadButton("report", "Generate report"), 
-                 # downloadButton("officerreport", "Generate officer report")
+                 ## add button to download report
+                 h4("Download your custom report!"), 
+                 radioButtons('format', tags$b('Pick a Document format'),
+                               c('PDF', 'HTML', 'Word'),
+                               inline = TRUE),
+                 downloadButton("report", "Generate report"),
+                 ## create report that works better with word/ppt
+                 ## create word template.docx (save in .Rproj)
+                 downloadButton("officerreport", "Generate officer report")
         )
       ) # Close tabsetPanel
     ) # Close mainPanel
